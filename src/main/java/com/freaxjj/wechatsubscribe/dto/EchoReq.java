@@ -1,6 +1,8 @@
-package com.freaxjj.wechatsubscribe.controller.dto;
+package com.freaxjj.wechatsubscribe.dto;
 
 import lombok.Data;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author 刘亚林
@@ -9,14 +11,18 @@ import lombok.Data;
  **/
 @Data
 public class EchoReq {
+    @NotBlank
     private String signature;
 
+    @NotBlank
     private String timestamp;
 
     /**
      * 随机数
      */
+    @NotBlank
     private String nonce;
 
+    @NotBlank
     private String echostr;
 }
