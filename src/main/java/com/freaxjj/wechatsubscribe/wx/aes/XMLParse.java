@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package com.freaxjj.wechatsubscribe.aes;
+package com.freaxjj.wechatsubscribe.wx.aes;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -15,4 +15,7 @@ public class TaobaoConfig {
 
     @Value("${taobao.secret}")
     private String secret;
+
+    @Value("${taobao.adzoneId}")
+    private Long adzoneId;
 }

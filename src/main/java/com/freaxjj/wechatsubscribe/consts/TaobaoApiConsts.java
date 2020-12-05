@@ -6,5 +6,6 @@ package com.freaxjj.wechatsubscribe.consts;
  * @create 2020/12/3 14:44
  **/
 public class TaobaoApiConsts {
-    public static final String MATERIAL_QRY = "taobao.tbk.dg.material.optional";
+    public static final String QRY_METHOD = "?method=";
+    public static final String MATERIAL_QRY = QRY_METHOD + "taobao.tbk.dg.material.optional";
 }

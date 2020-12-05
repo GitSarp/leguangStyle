@@ -11,7 +11,7 @@
  * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
  * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
  */
-package com.freaxjj.wechatsubscribe.aes;
+package com.freaxjj.wechatsubscribe.wx.aes;
 
 import org.apache.commons.codec.binary.Base64;
 

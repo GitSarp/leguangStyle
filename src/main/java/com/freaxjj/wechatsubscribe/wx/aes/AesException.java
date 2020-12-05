@@ -1,4 +1,4 @@
-package com.freaxjj.wechatsubscribe.aes;
+package com.freaxjj.wechatsubscribe.wx.aes;
 
 @SuppressWarnings("serial")
 public class AesException extends Exception {

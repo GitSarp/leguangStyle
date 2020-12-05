@@ -1,4 +1,4 @@
-package com.freaxjj.wechatsubscribe.dto;
+package com.freaxjj.wechatsubscribe.dto.req;
 
 import lombok.Data;
 

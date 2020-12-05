@@ -1,7 +1,7 @@
 package com.freaxjj.wechatsubscribe.config;
 
-import com.freaxjj.wechatsubscribe.aes.AesException;
-import com.freaxjj.wechatsubscribe.aes.WXBizMsgCrypt;
+import com.freaxjj.wechatsubscribe.wx.aes.AesException;
+import com.freaxjj.wechatsubscribe.wx.aes.WXBizMsgCrypt;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

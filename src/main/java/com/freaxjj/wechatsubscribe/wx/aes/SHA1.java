@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package com.freaxjj.wechatsubscribe.aes;
+package com.freaxjj.wechatsubscribe.wx.aes;
 
 import java.security.MessageDigest;
 import java.util.Arrays;

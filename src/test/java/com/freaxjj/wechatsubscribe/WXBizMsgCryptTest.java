@@ -1,7 +1,7 @@
 package com.freaxjj.wechatsubscribe;
 
-import com.freaxjj.wechatsubscribe.aes.AesException;
-import com.freaxjj.wechatsubscribe.aes.WXBizMsgCrypt;
+import com.freaxjj.wechatsubscribe.wx.aes.AesException;
+import com.freaxjj.wechatsubscribe.wx.aes.WXBizMsgCrypt;
 import org.junit.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

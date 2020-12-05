@@ -2,18 +2,19 @@ package com.freaxjj.wechatsubscribe.controller;
 
 import com.freaxjj.wechatsubscribe.config.TaobaoConfig;
 import com.freaxjj.wechatsubscribe.consts.TaobaoApiConsts;
-import com.freaxjj.wechatsubscribe.dto.GoodsQuery;
+import com.freaxjj.wechatsubscribe.dto.req.GoodsListReq;
+import com.freaxjj.wechatsubscribe.dto.resp.GoodsListVo;
 import com.taobao.api.ApiException;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.TbkDgMaterialOptionalRequest;
 import com.taobao.api.response.TbkDgMaterialOptionalResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author 刘亚林
@@ -22,56 +23,38 @@ import java.util.List;
  **/
 @RestController
 @CrossOrigin("http://localhost:8081")
+@Slf4j
 public class GoodsController {
     @Autowired
     TaobaoConfig taobaoConfig;
 
+    /**
+     * 创建搜索物料请求
+     * @param goodsListReq
+     * @return
+     */
+    private TbkDgMaterialOptionalRequest buildSearchMaterialReq(GoodsListReq goodsListReq){
+        TbkDgMaterialOptionalRequest req = new TbkDgMaterialOptionalRequest();
+        req.setAdzoneId(taobaoConfig.getAdzoneId());
+        req.setPageNo(goodsListReq.getPageNo());
+        req.setPageSize(goodsListReq.getPageSize());
+        req.setCat(goodsListReq.getCat());
+        req.setQ(goodsListReq.getQry());
+        return req;
+    }
 
     @GetMapping("/goods")
-    public List<TbkDgMaterialOptionalResponse.MapData> getGoodsList(GoodsQuery qryReq) throws ApiException {
+    public GoodsListVo getGoodsList(GoodsListReq qryReq) throws ApiException {
+        log.info("收到搜索商品请求: {}", qryReq);
+        if(StringUtils.isEmpty(qryReq.getQry()) && StringUtils.isEmpty(qryReq.getCat())){
+            //查询和类目不能都为空
+            new GoodsListVo();
+        }
+        TbkDgMaterialOptionalRequest req = buildSearchMaterialReq(qryReq);
         String url = taobaoConfig.getUrl().concat(TaobaoApiConsts.MATERIAL_QRY);
         TaobaoClient client = new DefaultTaobaoClient(url, taobaoConfig.getAppkey(), taobaoConfig.getSecret());
-        TbkDgMaterialOptionalRequest req = new TbkDgMaterialOptionalRequest();
-
-        req.setAdzoneId(111040950284L);
-        req.setCat("16,18");
-        req.setQ(qryReq.getQry());
-/*        req.setStartDsr(10L);
-        req.setPageSize(20L);
-        req.setPageNo(1L);
-        req.setPlatform(1L);
-        req.setEndTkRate(1234L);
-        req.setStartTkRate(1234L);
-        req.setEndPrice(10L);
-        req.setStartPrice(10L);
-        req.setIsOverseas(false);
-        req.setIsTmall(false);
-        req.setSort("tk_rate_des");
-        req.setItemloc("杭州");
-        req.setMaterialId(2836L);
-        req.setHasCoupon(false);
-        req.setIp("13.2.33.4");
-        req.setNeedFreeShipment(true);
-        req.setNeedPrepay(true);
-        req.setIncludePayRate30(true);
-        req.setIncludeGoodRate(true);
-        req.setIncludeRfdRate(true);
-        req.setNpxLevel(2L);
-        req.setEndKaTkRate(1234L);
-        req.setStartKaTkRate(1234L);
-        req.setDeviceEncrypt("MD5");
-        req.setDeviceValue("xxx");
-        req.setDeviceType("IMEI");
-        req.setLockRateEndTime(1567440000000L);
-        req.setLockRateStartTime(1567440000000L);
-        req.setLongitude("121.473701");
-        req.setLatitude("31.230370");
-        req.setCityCode("310000");
-        req.setSellerIds("1,2,3,4");
-        req.setSpecialId("2323");
-        req.setRelationId("3243");*/
         TbkDgMaterialOptionalResponse rsp = client.execute(req);
-        //return rsp.getBody();
-        return rsp.getResultList();
+        GoodsListVo goodsList = new GoodsListVo(rsp.getResultList(), rsp.getTotalResults());
+        return goodsList;
     }
 }

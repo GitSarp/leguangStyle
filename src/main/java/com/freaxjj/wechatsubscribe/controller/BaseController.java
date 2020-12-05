@@ -1,9 +1,9 @@
 package com.freaxjj.wechatsubscribe.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.freaxjj.wechatsubscribe.aes.AesException;
-import com.freaxjj.wechatsubscribe.aes.WXBizMsgCrypt;
-import com.freaxjj.wechatsubscribe.dto.EchoReq;
+import com.freaxjj.wechatsubscribe.wx.aes.AesException;
+import com.freaxjj.wechatsubscribe.wx.aes.WXBizMsgCrypt;
+import com.freaxjj.wechatsubscribe.dto.req.EchoReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -32,4 +32,6 @@ public class BaseController {
         wxBizMsgCrypt.verifyEcho(echoReq.getSignature(), echoReq.getTimestamp(), echoReq.getNonce());
         return echoReq.getEchostr();
     }
+
+
 }

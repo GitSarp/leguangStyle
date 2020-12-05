@@ -1,4 +1,4 @@
-package com.freaxjj.wechatsubscribe.dto;
+package com.freaxjj.wechatsubscribe.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodsQuery {
+public class GoodsListReq {
     private String qry;
-    //todo catid
+    private String cat;
+
+    private Long pageNo = 1L;
+    private Long pageSize = 20L;
 }
