@@ -7,5 +7,19 @@ package com.freaxjj.wechatsubscribe.consts;
  **/
 public class TaobaoApiConsts {
     public static final String QRY_METHOD = "?method=";
-    public static final String MATERIAL_QRY = QRY_METHOD + "taobao.tbk.dg.material.optional";
+
+    /**
+     * 物料搜索
+     */
+    public static final String MATERIAL_QRY = "taobao.tbk.dg.material.optional";
+
+    /**
+     * 商品详情
+     */
+    public static final String ITEM_INFO_GET = "taobao.tbk.item.info.get";
+
+    /**
+     * 淘口令
+     */
+    public static final String TPWD_GET = "taobao.tbk.tpwd.create";
 }
