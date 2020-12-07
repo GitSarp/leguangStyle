@@ -24,7 +24,6 @@ public class HeadTest {
         head.setAppSecret(APP_SECRET);
         head.setTimestamp(timesTamp);
         head.setNonce(nonce);
-        head.setVersion("1.0");
         System.out.println(JSON.toJSONString(head));
         String sign = MD5Util.md5(APP_ID + APP_SECRET + timesTamp + nonce + "1.0");
         System.out.println("sign = " + sign);

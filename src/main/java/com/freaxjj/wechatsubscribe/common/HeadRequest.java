@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @desc: 请求头公共请求参数
  * @author: 刘亚林
- * @date: 、
+ * @date:
  */
 @Data
 public class HeadRequest {
@@ -37,6 +37,6 @@ public class HeadRequest {
     /**
      * api版本号
      */
-    private String version = "1.0";
+    public static String version = "1.0";
 
 }

@@ -31,7 +31,7 @@ public class SignAuthInterceptor implements HandlerInterceptor {
 //    private RedisUtils redisUtils;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String allowedAppId = appConfig.getAppId();
         String appId = request.getHeader("appId");
         if (StringUtils.isEmpty(appId) || (!StringUtils.isEmpty(allowedAppId) && !allowedAppId.equals(appId))){
@@ -57,7 +57,7 @@ public class SignAuthInterceptor implements HandlerInterceptor {
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }
-        String signEcrypt = MD5Util.md5(appId  + appConfig.getSecret() + timestampStr + nonce + new HeadRequest().getVersion());
+        String signEcrypt = MD5Util.md5(appId  + appConfig.getSecret() + timestampStr + nonce + HeadRequest.version);
         long timestamp = 0;
         try {
             timestamp = Long.parseLong(timestampStr);
