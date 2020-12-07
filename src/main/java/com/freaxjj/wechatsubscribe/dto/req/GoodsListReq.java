@@ -40,6 +40,7 @@ public class GoodsListReq {
 
     /**
      * 好评率是否高于行业均值。True表示大于等于，false或不设置表示不限
+     * 传此参数报内部错误
      */
     private Boolean includeGoodRate = true;
 

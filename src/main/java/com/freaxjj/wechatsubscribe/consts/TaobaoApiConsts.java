@@ -14,6 +14,11 @@ public class TaobaoApiConsts {
     public static final String MATERIAL_QRY = "taobao.tbk.dg.material.optional";
 
     /**
+     * 物料精选
+     */
+    public static final String OPTIMUS_MATERIAL = "taobao.tbk.dg.optimus.material";
+
+    /**
      * 商品详情
      */
     public static final String ITEM_INFO_GET = "taobao.tbk.item.info.get";

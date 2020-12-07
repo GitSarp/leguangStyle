@@ -3,14 +3,17 @@ package com.freaxjj.wechatsubscribe.controller;
 import com.freaxjj.wechatsubscribe.common.config.TaobaoConfig;
 import com.freaxjj.wechatsubscribe.consts.TaobaoApiConsts;
 import com.freaxjj.wechatsubscribe.dto.req.GoodsListReq;
+import com.freaxjj.wechatsubscribe.dto.req.OptimusGoodsReq;
 import com.freaxjj.wechatsubscribe.dto.req.TpwdReq;
 import com.freaxjj.wechatsubscribe.dto.resp.GoodsListVo;
 import com.taobao.api.ApiException;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.TbkDgMaterialOptionalRequest;
+import com.taobao.api.request.TbkDgOptimusMaterialRequest;
 import com.taobao.api.request.TbkItemInfoGetRequest;
 import com.taobao.api.request.TbkTpwdCreateRequest;
 import com.taobao.api.response.TbkDgMaterialOptionalResponse;
+import com.taobao.api.response.TbkDgOptimusMaterialResponse;
 import com.taobao.api.response.TbkItemInfoGetResponse;
 import com.taobao.api.response.TbkTpwdCreateResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -42,29 +45,15 @@ public class GoodsController {
     TaobaoConfig taobaoConfig;
 
     /**
-     * 创建搜索物料请求
-     * @param goodsListReq
+     * 通用物料搜索
+     * @param request
+     * @param qryReq
      * @return
+     * @throws ApiException
      */
-    private TbkDgMaterialOptionalRequest buildSearchMaterialReq(HttpServletRequest request, GoodsListReq goodsListReq){
-        TbkDgMaterialOptionalRequest req = new TbkDgMaterialOptionalRequest();
-        req.setAdzoneId(taobaoConfig.getAdzoneId());
-        req.setPageNo(goodsListReq.getPageNo());
-        req.setPageSize(goodsListReq.getPageSize());
-        req.setCat(goodsListReq.getCat());
-        req.setQ(goodsListReq.getQry());
-        req.setMaterialId(goodsListReq.getMaterialId());
-        req.setHasCoupon(goodsListReq.getHasCoupon());
-        req.setIncludeGoodRate(goodsListReq.getIncludeGoodRate());
-        req.setSort(goodsListReq.getSort());
-        //ip参数影响邮费获取，如果不传或者传入不准确，邮费无法精准提供
-        req.setIp(request.getRemoteAddr());
-        return req;
-    }
-
     @GetMapping("/list")
     public GoodsListVo getGoodsList(HttpServletRequest request, GoodsListReq qryReq) throws ApiException {
-        log.info("收到搜索商品请求: {}", qryReq);
+        log.info("收到物料搜索请求: {}", qryReq);
         if(StringUtils.isEmpty(qryReq.getQry()) && StringUtils.isEmpty(qryReq.getCat())){
             //查询和类目不能都为空
             new GoodsListVo();
@@ -102,6 +91,28 @@ public class GoodsController {
     }
 
     /**
+     * 天天特卖31362
+     * 实时热销榜https://mos.m.taobao.com/union/1212shishi2c_2C?pid=mm_0_0_0
+     * 特惠4094
+     * 领券：综合3756 鞋包配饰3762 母婴3760 女装3767 美妆个护3763 食品3761 家居家装3758 男装3764 运动户外3766 数码家电3759 内衣3765
+     * 潮流范4093
+     *
+     * next 高佣榜:综合13366	 鞋包配饰13370 母婴13374 女装13367 美妆个护13371 食品13375 家居家装13368 男装13372 运动户外13376 数码家电13369 内衣13373
+     * next 相似推荐 猜你喜欢 选品库
+     * next 猫超优质爆款 本地化生活
+     * @param optimusGoodsReq
+     * @return
+     * @throws ApiException
+     */
+    @GetMapping("/optimus")
+    public String optimusGoods(@Valid OptimusGoodsReq optimusGoodsReq) throws ApiException {
+        TaobaoClient client = taobaoConfig.getTaobaoClient(TaobaoApiConsts.OPTIMUS_MATERIAL);
+        TbkDgOptimusMaterialRequest req = buildOptimusMaterialReq(optimusGoodsReq);
+        TbkDgOptimusMaterialResponse rsp = client.execute(req);
+        return rsp.getBody();
+    }
+
+    /**
      * 获取淘口令
      * @param tpwdReq
      * @param request
@@ -118,5 +129,49 @@ public class GoodsController {
         //req.setLogo("https://uland.taobao.com/");
         TbkTpwdCreateResponse rsp = client.execute(req);
         return rsp.getData().getModel();
+    }
+
+
+    /**
+     * 创建物料精选请求
+     * @param optimusGoodsReq
+     * @return
+     */
+    private TbkDgOptimusMaterialRequest buildOptimusMaterialReq(OptimusGoodsReq optimusGoodsReq){
+        log.info("收到物料搜索请求: {}", optimusGoodsReq);
+        TbkDgOptimusMaterialRequest req = new TbkDgOptimusMaterialRequest();
+        req.setAdzoneId(taobaoConfig.getAdzoneId());
+        req.setPageNo(optimusGoodsReq.getPageNo());
+        req.setPageSize(optimusGoodsReq.getPageSize());
+        //相似商品推荐
+        req.setItemId(optimusGoodsReq.getItemId());
+        //todo
+        req.setDeviceType(optimusGoodsReq.getDeviceType());
+        req.setDeviceEncrypt(optimusGoodsReq.getDeviceEncryt());
+        req.setDeviceValue(optimusGoodsReq.getDeviceValue());
+        req.setMaterialId(optimusGoodsReq.getMaterialId());
+        return req;
+    }
+
+    /**
+     * 创建搜索物料请求
+     * @param goodsListReq
+     * @return
+     */
+    private TbkDgMaterialOptionalRequest buildSearchMaterialReq(HttpServletRequest request, GoodsListReq goodsListReq){
+        TbkDgMaterialOptionalRequest req = new TbkDgMaterialOptionalRequest();
+        req.setAdzoneId(taobaoConfig.getAdzoneId());
+        req.setPageNo(goodsListReq.getPageNo());
+        req.setPageSize(goodsListReq.getPageSize());
+        req.setCat(goodsListReq.getCat());
+        req.setQ(goodsListReq.getQry());
+        req.setMaterialId(goodsListReq.getMaterialId());
+        req.setHasCoupon(goodsListReq.getHasCoupon());
+        req.setIncludeGoodRate(goodsListReq.getIncludeGoodRate());
+        req.setSort(goodsListReq.getSort());
+        //ip参数影响邮费获取，如果不传或者传入不准确，邮费无法精准提供
+        log.info("获取到请求ip：{}", request.getRemoteAddr());
+        req.setIp(request.getRemoteAddr());
+        return req;
     }
 }
