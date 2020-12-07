@@ -1,9 +1,3 @@
 spring:
-  application:
-    name: wechat-subscribe
-
-server:
-  servlet:
-    context-path: /wechat
-
-  port: 8080
+  profiles:
+    active: prod

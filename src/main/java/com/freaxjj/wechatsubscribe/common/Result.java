@@ -8,7 +8,9 @@ public class Result<T> {
     String msg;
     T data;
 
-    public static final Result REQ_PARAM_ERROR = new Result(999999, "请求参数错误");
+    public static final Result UNKNOWN_ERROR = new Result(999999, "请求参数错误");
+
+    public static final Result REQ_PARAM_ERROR = new Result(111111, "请求参数错误");
 
 
     public Result(int code, String msg) {

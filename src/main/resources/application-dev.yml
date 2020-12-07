@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: wechat-subscribe
+
+server:
+  servlet:
+    context-path: /wechat
+
+  port: 8080
+
+wx:
+  appId:
+  token:
+  encodingAESKey:
+
+taobao:
+  url:
+  appkey:
+  secret:
+  adzoneId:
+
+app:
+  appId:
+  secret:

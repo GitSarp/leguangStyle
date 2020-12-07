@@ -1,6 +1,6 @@
 package com.freaxjj.wechatsubscribe.controller;
 
-import com.freaxjj.wechatsubscribe.config.TaobaoConfig;
+import com.freaxjj.wechatsubscribe.common.config.TaobaoConfig;
 import com.freaxjj.wechatsubscribe.consts.TaobaoApiConsts;
 import com.freaxjj.wechatsubscribe.dto.req.GoodsListReq;
 import com.freaxjj.wechatsubscribe.dto.req.TpwdReq;
@@ -64,7 +64,6 @@ public class GoodsController {
 
     @GetMapping("/list")
     public GoodsListVo getGoodsList(HttpServletRequest request, GoodsListReq qryReq) throws ApiException {
-        //todo filter验签
         log.info("收到搜索商品请求: {}", qryReq);
         if(StringUtils.isEmpty(qryReq.getQry()) && StringUtils.isEmpty(qryReq.getCat())){
             //查询和类目不能都为空
@@ -86,6 +85,7 @@ public class GoodsController {
     @GetMapping("/detail")
     public TbkItemInfoGetResponse.NTbkItem getGoodsDetail(HttpServletRequest request) throws ApiException {
         String goodsId = request.getParameter("goodsId");
+        log.info("收到获取商品详情请求: {}", goodsId);
         if(StringUtils.isEmpty(goodsId)){
             return new TbkItemInfoGetResponse.NTbkItem();
         }

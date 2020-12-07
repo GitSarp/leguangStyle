@@ -1,4 +1,4 @@
-package com.freaxjj.wechatsubscribe.config;
+package com.freaxjj.wechatsubscribe.common.config;
 
 import com.freaxjj.wechatsubscribe.wx.aes.AesException;
 import com.freaxjj.wechatsubscribe.wx.aes.WXBizMsgCrypt;

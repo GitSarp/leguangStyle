@@ -1,11 +1,10 @@
-package com.freaxjj.wechatsubscribe.config;
+package com.freaxjj.wechatsubscribe.common.config;
 
 import com.freaxjj.wechatsubscribe.consts.TaobaoApiConsts;
 import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
