@@ -27,6 +27,7 @@ public class DefaultWebMvcConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(signAuthInterceptor)
                 //所有请求都需要进行报文签名sign
+                .excludePathPatterns("/**.html","/static/**")
                 .addPathPatterns("/**");
 /*        registry.addInterceptor(permissionInterceptor)
                 .addPathPatterns("/**")
