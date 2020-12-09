@@ -6,6 +6,7 @@ import com.freaxjj.wechatsubscribe.dto.req.GoodsListReq;
 import com.freaxjj.wechatsubscribe.dto.req.OptimusGoodsReq;
 import com.freaxjj.wechatsubscribe.dto.req.TpwdReq;
 import com.freaxjj.wechatsubscribe.dto.resp.GoodsListVo;
+import com.freaxjj.wechatsubscribe.dto.resp.OptGoodsListVo;
 import com.taobao.api.ApiException;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.TbkDgMaterialOptionalRequest;
@@ -105,11 +106,12 @@ public class GoodsController {
      * @throws ApiException
      */
     @GetMapping("/optimus")
-    public String optimusGoods(@Valid OptimusGoodsReq optimusGoodsReq) throws ApiException {
+    public OptGoodsListVo optimusGoods(@Valid OptimusGoodsReq optimusGoodsReq) throws ApiException {
         TaobaoClient client = taobaoConfig.getTaobaoClient(TaobaoApiConsts.OPTIMUS_MATERIAL);
         TbkDgOptimusMaterialRequest req = buildOptimusMaterialReq(optimusGoodsReq);
         TbkDgOptimusMaterialResponse rsp = client.execute(req);
-        return rsp.getBody();
+        OptGoodsListVo vo = new OptGoodsListVo(rsp.getIsDefault(), rsp.getResultList(), rsp.getTotalCount());
+        return vo;
     }
 
     /**
@@ -121,6 +123,7 @@ public class GoodsController {
      */
     @GetMapping("/tpwd")
     public String getTpWd(@Valid TpwdReq tpwdReq, HttpServletRequest request) throws ApiException {
+        log.info("收到获取淘口令请求: {}", tpwdReq);
         TaobaoClient client = taobaoConfig.getTaobaoClient(TaobaoApiConsts.TPWD_GET);
         TbkTpwdCreateRequest req = new TbkTpwdCreateRequest();
         //req.setUserId("123");
@@ -138,7 +141,7 @@ public class GoodsController {
      * @return
      */
     private TbkDgOptimusMaterialRequest buildOptimusMaterialReq(OptimusGoodsReq optimusGoodsReq){
-        log.info("收到物料搜索请求: {}", optimusGoodsReq);
+        log.info("收到物料精选请求: {}", optimusGoodsReq);
         TbkDgOptimusMaterialRequest req = new TbkDgOptimusMaterialRequest();
         req.setAdzoneId(taobaoConfig.getAdzoneId());
         req.setPageNo(optimusGoodsReq.getPageNo());
