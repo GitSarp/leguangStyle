@@ -1,5 +1,6 @@
 package com.freaxjj.wechatsubscribe.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.freaxjj.wechatsubscribe.common.config.TaobaoConfig;
 import com.freaxjj.wechatsubscribe.consts.TaobaoApiConsts;
 import com.freaxjj.wechatsubscribe.dto.req.GoodsListReq;
@@ -131,6 +132,7 @@ public class GoodsController {
         req.setUrl(tpwdReq.getUrl());
         //req.setLogo("https://uland.taobao.com/");
         TbkTpwdCreateResponse rsp = client.execute(req);
+        //log.info("淘口令返回：{}", JSON.toJSONString(rsp));
         return rsp.getData().getModel();
     }
 
