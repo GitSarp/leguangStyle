@@ -32,6 +32,12 @@ public class SignAuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        String servletPath = request.getServletPath();
+        //放行微信验证
+        if("/echo".equals(servletPath)) {
+            return true;
+        }
+
         String allowedAppId = appConfig.getAppId();
         String appId = request.getHeader("appId");
         if (StringUtils.isEmpty(appId) || (!StringUtils.isEmpty(allowedAppId) && !allowedAppId.equals(appId))){
