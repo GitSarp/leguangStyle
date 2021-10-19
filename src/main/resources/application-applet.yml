@@ -1,0 +1,44 @@
+server:
+  servlet:
+    context-path: /wechat
+  port: 8081
+
+spring:
+  application:
+    name: wechat-subscribe
+  #密码等配置
+  profiles:
+    include: secret
+  #数据源
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/leguang?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: mysql8578
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        dialect: com.freaxjj.wechatsubscribe.business.config.MySQL5TableType
+
+
+##secret.yml
+##微信总配
+#wechat:
+#  appId:
+#  token:
+#  encodingAESKey:
+#  #微信app配置
+#  apps:
+#    #小程序
+#    appIdA: secretA
+#    #公众号
+#    appIdB: secretB
+#
+#taobao:
+#  url:
+#  appkey:
+#  secret:
+#  adzoneId:

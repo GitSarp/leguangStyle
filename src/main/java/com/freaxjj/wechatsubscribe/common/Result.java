@@ -12,6 +12,8 @@ public class Result<T> {
 
     public static final Result REQ_PARAM_ERROR = new Result(111111, "请求参数错误");
 
+    public static final Result SUCCESS = new Result(000000, "请求成功");
+
 
     public Result(int code, String msg) {
         this.code = code;

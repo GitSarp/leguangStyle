@@ -1,11 +1,12 @@
 package com.freaxjj.wechatsubscribe.common;
 
 import com.alibaba.fastjson.JSON;
-import com.freaxjj.wechatsubscribe.common.config.AppConfig;
+import com.freaxjj.wechatsubscribe.common.config.WechatConfig;
 import com.freaxjj.wechatsubscribe.utils.MD5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author 刘亚林
@@ -25,7 +27,7 @@ public class SignAuthInterceptor implements HandlerInterceptor {
     private static final String NONCE_KEY = "x-nonce-";
 
     @Autowired
-    private AppConfig appConfig;
+    private WechatConfig wechatConfig;
 
 //    @Autowired
 //    private RedisUtils redisUtils;
@@ -38,32 +40,36 @@ public class SignAuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String allowedAppId = appConfig.getAppId();
+        //支持多个app
+        Map<String, String> allowedApps = wechatConfig.getApps();
         String appId = request.getHeader("appId");
-        if (StringUtils.isEmpty(appId) || (!StringUtils.isEmpty(allowedAppId) && !allowedAppId.equals(appId))){
-            log.debug("appId不能为空...........");
+        if (!CollectionUtils.isEmpty(allowedApps) && !allowedApps.containsKey(appId)){
+            log.info("appId不正确...........");
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }
+        //设置appSecret
+        request.setAttribute("appSecret", allowedApps.get(appId));
+
         String timestampStr = request.getHeader("timestamp");
         if (StringUtils.isEmpty(timestampStr)){
-            log.debug("timestamp不能为空...........");
+            log.info("timestamp不能为空...........");
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }
         String sign = request.getHeader("sign");
         if (StringUtils.isEmpty(sign)){
-            log.debug("sign不能为空...........");
+            log.info("sign不能为空...........");
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }
         String nonce = request.getHeader("nonce");
         if (StringUtils.isEmpty(nonce)){
-            log.debug("nonce不能为空...........");
+            log.info("nonce不能为空...........");
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }
-        String signEcrypt = MD5Util.md5(appId  + appConfig.getSecret() + timestampStr + nonce + HeadRequest.version);
+        String signEcrypt = MD5Util.md5(appId  + allowedApps.get(appId) + timestampStr + nonce + HeadRequest.version);
         long timestamp = 0;
         try {
             timestamp = Long.parseLong(timestampStr);
@@ -72,7 +78,7 @@ public class SignAuthInterceptor implements HandlerInterceptor {
         }
         //1.前端传过来的时间戳与服务器当前时间戳差值大于180，则当前请求的timestamp无效
         if (Math.abs(timestamp - System.currentTimeMillis() / 1000) > 180){
-            log.debug("timestamp无效...........");
+            log.info("timestamp无效...........");
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }
@@ -85,7 +91,7 @@ public class SignAuthInterceptor implements HandlerInterceptor {
         }*/
         //3.通过后台MD5重新签名校验与前端签名sign值比对，确认当前请求数据是否被篡改
         if (!(sign.equalsIgnoreCase(signEcrypt))){
-            log.debug("sign签名校验失败...........");
+            log.info("sign签名校验失败...........");
             renderString(response, JSON.toJSONString(Result.REQ_PARAM_ERROR));
             return false;
         }

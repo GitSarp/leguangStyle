@@ -22,7 +22,7 @@ public class OptimusGoodsReq {
      * 智能推荐，猜你喜欢
      */
     private String deviceValue;
-    private String deviceEncryt;
+    private String deviceEncrypt;
     private String deviceType;
 
     /**

@@ -34,3 +34,4 @@ build/
 
 ### application.yml ###
 application-prod.yml
+application-secret.yml
