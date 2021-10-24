@@ -1,1 +1,3 @@
-wechat-subscribe
+
+代码已迁移至私库，效果见微信小程序“乐逛Style”
+
